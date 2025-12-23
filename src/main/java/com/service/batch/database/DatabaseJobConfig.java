@@ -61,6 +61,7 @@ public class DatabaseJobConfig {
                 .name("databaseStepItemReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT DD FROM DatabaseData DD")
+                .transacted(false)
                 .build();
     }
 
@@ -72,12 +73,9 @@ public class DatabaseJobConfig {
         };
     }
 
-    // TODO: N + 1 확인
     private ItemWriter<DatabaseData> itemWriter() {
         return new JpaItemWriterBuilder<DatabaseData>()
                 .entityManagerFactory(entityManagerFactory)
-                .usePersist(false)
-                .clearPersistenceContext(false)
                 .build();
     }
 

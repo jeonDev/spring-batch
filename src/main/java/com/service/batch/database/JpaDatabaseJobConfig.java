@@ -22,15 +22,15 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableBatchProcessing
 @EnableJdbcJobRepository(dataSourceRef = "batchDataSource", transactionManagerRef = "batchTransactionManager")
-public class DatabaseJobConfig {
+public class JpaDatabaseJobConfig {
 
     private final JobRepository jobRepository;
     private final EntityManagerFactory entityManagerFactory;
     private final PlatformTransactionManager transactionManager;
 
-    public DatabaseJobConfig(JobRepository jobRepository,
-                             EntityManagerFactory entityManagerFactory,
-                             PlatformTransactionManager transactionManager
+    public JpaDatabaseJobConfig(JobRepository jobRepository,
+                                EntityManagerFactory entityManagerFactory,
+                                PlatformTransactionManager transactionManager
     ) {
         this.jobRepository = jobRepository;
         this.entityManagerFactory = entityManagerFactory;
@@ -38,16 +38,16 @@ public class DatabaseJobConfig {
     }
 
     @Bean
-    public Job databaseJob() {
-        return new JobBuilder("databaseJob", jobRepository)
-                .start(databaseStep())
+    public Job jpaDatabaseJob() {
+        return new JobBuilder("jpaDatabaseJob", jobRepository)
+                .start(jpaDatabaseStep())
                 .build();
     }
 
     @Bean
     @JobScope
-    public Step databaseStep() {
-        return new StepBuilder("databaseStep", jobRepository)
+    public Step jpaDatabaseStep() {
+        return new StepBuilder("jpaDatabaseStep", jobRepository)
                 .<DatabaseData, DatabaseData>chunk(10)
                 .transactionManager(transactionManager)
                 .reader(itemReader())
@@ -58,7 +58,7 @@ public class DatabaseJobConfig {
 
     private ItemReader<DatabaseData> itemReader() {
         return new JpaPagingItemReaderBuilder<DatabaseData>()
-                .name("databaseStepItemReader")
+                .name("jpaDatabaseStepItemReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT DD FROM DatabaseData DD")
                 .transacted(false)

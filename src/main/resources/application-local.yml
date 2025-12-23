@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/batch?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      username: batch
+      password: batch
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+
+batch:
+  datasource:
+    driver-class-name: org.h2.Driver
+    jdbc-url: jdbc:h2:mem:batch
+    username: sa
+    password:
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
